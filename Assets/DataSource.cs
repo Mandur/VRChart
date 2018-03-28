@@ -26,4 +26,12 @@ namespace Assets
             }
         }
     }
+    class Category
+    {
+        public String name
+        {
+            get;set;
+        }
+
+    }
 }
