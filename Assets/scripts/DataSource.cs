@@ -12,6 +12,11 @@ namespace Assets
 
         public DataSource()
         {
+        
+        }
+
+        public void generateMockDataSource(double min, double max)
+        {
             dataSet2 = new List<DataPointModel>();
             dataSetCategories = new List<KeyValuePair<string, string>>();
 
@@ -25,14 +30,29 @@ namespace Assets
                 var cat = string.Format("Category {0}", i);
                 for (var b = 0; b <= 11; b++)
                 {
-                    var val = rndBar.NextDouble() * (50 - 2) + 2;
+                    ///---only for demostration that the number generated will be between 2 and 
+                    var val = rndBar.NextDouble() * (max - min) + min;
                     vals.Add(val);
                     dataSet2.Add(new DataPointModel(cat, val));
                 }
                 i++;
             }
+            var maxOrig = dataSet2.Max(p => p.value);
+            var minOrig = dataSet2.Min(p => p.value);
+            for (var t = 0; t < dataSet2.Count; t++)
+            {
+                this.dataSet2[t].value = this.normalizeValue(this.dataSet2[t].value, 0, 1, minOrig, maxOrig);
+            }
+
             //---Get distinct category keys
-            dataSetCategories = dataSet2.GroupBy(p => p.key).Select(p => new KeyValuePair<string,string>(p.First().key, p.First().name)).ToList();
+            dataSetCategories = dataSet2.GroupBy(p => p.key).Select(p => new KeyValuePair<string, string>(p.First().key, p.First().name)).ToList();
+        }
+        
+
+        private double normalizeValue(double val, double maxNewRange, double minNewRange, double minOriginalRange, double maxOriginalRange)
+        {
+            var newValue = minNewRange + (((maxNewRange - minNewRange) * (val - minOriginalRange)) / (maxOriginalRange - minOriginalRange));
+            return newValue;
         }
 
     }
@@ -43,12 +63,14 @@ namespace Assets
     public class DataPointModel
     {
         private string _name = "";
+        private double _value = 0;
 
         public DataPointModel() { }
 
         public DataPointModel(string  name, double value)
         {
             this.name = name;
+            this.originalValue = value;
             this.value = value;
         }
         
@@ -65,7 +87,17 @@ namespace Assets
             }
         }
 
-        public double value { get; set; }
+        public double value {
+            get {
+                return this._value;
+            } set
+            {
+                this._value = value;
+            }
+        }
+
+        public double originalValue { get; set; }
+
         public string key{get;private set;}
     }
 }
