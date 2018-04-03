@@ -14,7 +14,7 @@ public class ControllerScript : MonoBehaviour {
 
     private void InteractionManager_InteractionSourceDetected(InteractionSourceDetectedEventArgs obj)
     {
-       Debug.Log("asdsad");
+       
     }
 
     // Update is called once per frame
@@ -27,7 +27,7 @@ public class ControllerScript : MonoBehaviour {
     }
     private void InteractionSourcePressed(InteractionSourcePressedEventArgs obj)
     {
-        Debug.Log("here");
+        //Debug.Log("here");
     }
 
 }

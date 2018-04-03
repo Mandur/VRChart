@@ -7,7 +7,7 @@ namespace Assets
 {
     class DataSource
     {
-        public List<DataPointModel> dataSet2;
+        public List<DataPointModel> dataSet;
         public List<KeyValuePair<string, string>> dataSetCategories;
 
         public DataSource()
@@ -15,12 +15,11 @@ namespace Assets
         
         }
 
-        public void generateMockDataSource(double min, double max)
+        public void generateMockDataSource(int months, double min, double max)
         {
-            dataSet2 = new List<DataPointModel>();
+            dataSet = new List<DataPointModel>();
             dataSetCategories = new List<KeyValuePair<string, string>>();
-
-
+            
             var rndSet = new System.Random(DateTime.Now.Millisecond);
             var i = 0;
             while (i < rndSet.Next(10, 20))
@@ -28,24 +27,24 @@ namespace Assets
                 var rndBar = new System.Random(rndSet.Next());
                 var vals = new List<double>();
                 var cat = string.Format("Category {0}", i);
-                for (var b = 0; b <= 11; b++)
+                for (var b = 1; b <= months; b++)
                 {
                     ///---only for demostration that the number generated will be between 2 and 
                     var val = rndBar.NextDouble() * (max - min) + min;
                     vals.Add(val);
-                    dataSet2.Add(new DataPointModel(cat, val));
+                    dataSet.Add(new DataPointModel(cat, val, b));
                 }
                 i++;
             }
-            var maxOrig = dataSet2.Max(p => p.value);
-            var minOrig = dataSet2.Min(p => p.value);
-            for (var t = 0; t < dataSet2.Count; t++)
+            var maxOrig = dataSet.Max(p => p.value);
+            var minOrig = dataSet.Min(p => p.value);
+            for (var t = 0; t < dataSet.Count; t++)
             {
-                this.dataSet2[t].value = this.normalizeValue(this.dataSet2[t].value, 0, 1, minOrig, maxOrig);
+                this.dataSet[t].value = this.normalizeValue(this.dataSet[t].value, 0, 1, minOrig, maxOrig);
             }
 
             //---Get distinct category keys
-            dataSetCategories = dataSet2.GroupBy(p => p.key).Select(p => new KeyValuePair<string, string>(p.First().key, p.First().name)).ToList();
+            dataSetCategories = dataSet.GroupBy(p => p.key).Select(p => new KeyValuePair<string, string>(p.First().key, p.First().name)).ToList();
         }
         
 
@@ -65,13 +64,16 @@ namespace Assets
         private string _name = "";
         private double _value = 0;
 
+        public int month { get; set; }
+
         public DataPointModel() { }
 
-        public DataPointModel(string  name, double value)
+        public DataPointModel(string  name, double value, int month)
         {
             this.name = name;
             this.originalValue = value;
             this.value = value;
+            this.month = month;
         }
         
         public string name

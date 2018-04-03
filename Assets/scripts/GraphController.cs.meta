@@ -1,11 +1,15 @@
 fileFormatVersion: 2
 guid: 5546a6174c94dc64caff1f39d73980b5
-timeCreated: 1522237184
+timeCreated: 1522769613
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - zAxisTextPrefab: {fileID: 1597800389533568, guid: 97b9d7c434ab0874581e94a699ebd84c,
+      type: 2}
+  - barPrefab: {instanceID: 0}
+  - menu: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
