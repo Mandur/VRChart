@@ -1,4 +1,5 @@
 ﻿using Assets;
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,16 +23,16 @@ public class GraphController : MonoBehaviour {
 
         Vector3 currentOffset = Vector3.zero;
 
-        foreach (var key in generator.dataSet.Keys)
+        foreach (var kvp in generator.dataSetCategories)
         {
         
            var material = new Material(Shader.Find("Specular"));
             material.color = UnityEngine.Random.ColorHSV();
-            materialList.Add(key,material);
-            foreach (var value in generator.dataSet[key])
+            materialList.Add(kvp.Key,material);
+            foreach (var item in generator.dataSet2.Where(p => p.key == kvp.Key))
             {
                 GameObject go = Instantiate(barPrefab);
-                go.transform.localScale = new Vector3(1, (float)value, 1);
+                go.transform.localScale = new Vector3(1, (float)item.value, 1);
                 go.transform.position = new Vector3(currentOffset.x, go.transform.localScale.y / 2, currentOffset.z);
                 go.GetComponent<MeshRenderer>().material = material;
                 currentOffset.x += 2;

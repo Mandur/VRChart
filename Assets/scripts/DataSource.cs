@@ -7,31 +7,65 @@ namespace Assets
 {
     class DataSource
     {
-        public Dictionary<string, List<double>> dataSet;
+        public List<DataPointModel> dataSet2;
+        public List<KeyValuePair<string, string>> dataSetCategories;
+
         public DataSource()
         {
-            dataSet = new Dictionary<string, List<double>>();
+            dataSet2 = new List<DataPointModel>();
+            dataSetCategories = new List<KeyValuePair<string, string>>();
+
+
             var rndSet = new System.Random(DateTime.Now.Millisecond);
             var i = 0;
-            while (i < rndSet.Next(5, 10))
+            while (i < rndSet.Next(10, 20))
             {
-                var rndBar = new System.Random(DateTime.Now.Millisecond);
+                var rndBar = new System.Random(rndSet.Next());
                 var vals = new List<double>();
+                var cat = string.Format("Category {0}", i);
                 for (var b = 0; b <= 11; b++)
                 {
-                    vals.Add(rndBar.NextDouble() * (150 - 2) + 2);
+                    var val = rndBar.NextDouble() * (50 - 2) + 2;
+                    vals.Add(val);
+                    dataSet2.Add(new DataPointModel(cat, val));
                 }
-                dataSet.Add(string.Format("category {0}", i), vals);
                 i++;
             }
-        }
-    }
-    class Category
-    {
-        public String name
-        {
-            get;set;
+            //---Get distinct category keys
+            dataSetCategories = dataSet2.GroupBy(p => p.key).Select(p => new KeyValuePair<string,string>(p.First().key, p.First().name)).ToList();
         }
 
+    }
+
+    
+
+
+    public class DataPointModel
+    {
+        private string _name = "";
+
+        public DataPointModel() { }
+
+        public DataPointModel(string  name, double value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+        
+        public string name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = (value == null) ? "" : value.Trim();
+                key = _name.ToLower();
+            }
+        }
+
+        public double value { get; set; }
+        public string key{get;private set;}
     }
 }
