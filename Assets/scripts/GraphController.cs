@@ -40,11 +40,18 @@ public class GraphController : MonoBehaviour {
                 GameObject go = Instantiate(barPrefab);
                 go.transform.localScale = new Vector3(1, (float)item.value * scale, 1);
                 go.transform.position = new Vector3(currentOffset.x, go.transform.localScale.y / 2, currentOffset.z);
+
+
+
                 go.GetComponent<MeshRenderer>().material = material;
                 currentOffset.x += 2;
                 go.transform.parent = this.transform;
                 bars.Add(go);
             }
+            var line = gameObject.GetComponent<LineRenderer>();
+            var distance = Vector3.Distance(new Vector3(-5, 5, currentOffset.z), new Vector3(currentOffset.x + 5, 5, currentOffset.z));
+            line.materials[0].mainTextureScale = new Vector3(distance, 1, 1);
+
             currentOffset.x = 0;
             currentOffset.z += 2;
         }
@@ -57,6 +64,8 @@ public class GraphController : MonoBehaviour {
 
     public void setZAxisLabels(int totalMonths)
     {
+
+
 
         var i = 1;
         var year = DateTime.Now.Year - 3;

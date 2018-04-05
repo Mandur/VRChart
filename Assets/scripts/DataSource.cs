@@ -29,7 +29,6 @@ namespace Assets
                 var cat = string.Format("Category {0}", i);
                 for (var b = 1; b <= months; b++)
                 {
-                    ///---only for demostration that the number generated will be between 2 and 
                     var val = rndBar.NextDouble() * (max - min) + min;
                     vals.Add(val);
                     dataSet.Add(new DataPointModel(cat, val, b));
