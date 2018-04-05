@@ -15,18 +15,26 @@ public class GraphController : MonoBehaviour {
     private int categoriesValues;
     private DataSource dataSource;
     public LegendScript menu;
+    private List<LineRenderer> lineRenderers;
 
 
     // Use this for initialization
     void Start()
     {
+        lineRenderers = new List<LineRenderer>();
+        for( int i=0; i<6;i++)
+        {
+            var lr = new GameObject(string.Format("lr{0}", i));
+            lr.transform.parent = this.transform;
+            lineRenderers.Add(lr.AddComponent<LineRenderer>());
+        }
         var months = new System.Random(DateTime.Now.Millisecond).Next(12, 36);
 
 
         dataSource = new DataSource();
         dataSource.generateMockDataSource(months,0, 2000);
         materialList = new Dictionary<string, Material>();
-
+        float lastXOffset = 0;
         Vector3 currentOffset = Vector3.zero;
 
         foreach (var kvp in dataSource.dataSetCategories)
@@ -53,9 +61,23 @@ public class GraphController : MonoBehaviour {
             var distance = Vector3.Distance(new Vector3(-5, 5, currentOffset.z), new Vector3(currentOffset.x + 5, 5, currentOffset.z));
             line.materials[0].mainTextureScale = new Vector3(distance, 1, 1);
             */
+            lastXOffset = currentOffset.x;
             currentOffset.x = 0;
             currentOffset.z += 2;
         }
+        for (int i = 0; i < 6; i++)
+        {
+            var line = lineRenderers[i];
+            line.material = new Material(Shader.Find("Particles/Additive"));
+            line.startColor=Color.blue;
+            line.endColor = Color.blue;
+            line.widthMultiplier = 0.1f;
+            line.positionCount = 3;
+            line.SetPosition(0, new Vector3(0, i*2, currentOffset.z));
+            line.SetPosition(1, new Vector3(lastXOffset, i * 2, currentOffset.z));
+            line.SetPosition(2, new Vector3(lastXOffset, i * 2, 0));
+        }
+       
         menu.populateLegend(materialList);
         setZAxisLabels(months);
 
@@ -69,10 +91,13 @@ public class GraphController : MonoBehaviour {
         var year = DateTime.Now.Year - 3;
         var currentOffset = Vector3.zero;
         var xOffset = -4;
+        var axisContainer = new GameObject("AxisLegend");
         while (i <= totalMonths)
         {
             var go = Instantiate(zAxisTextPrefab, new Vector3(xOffset, 0, -4.5f), Quaternion.Euler(90, -45, 0));
             go.transform.Translate(new Vector3(2, 0, 0));
+            go.transform.parent = axisContainer.transform;
+          
             var month = i % 12 == 0?12:i%12;
             var display = new DateTime(year, month, 1).ToString("MMM yyyy");
             xOffset += 2;
