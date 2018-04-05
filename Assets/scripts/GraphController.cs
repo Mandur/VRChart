@@ -22,7 +22,7 @@ public class GraphController : MonoBehaviour {
     void Start()
     {
         lineRenderers = new List<LineRenderer>();
-        for( int i=0; i<6;i++)
+        for (int i = 0; i < 6; i++)
         {
             var lr = new GameObject(string.Format("lr{0}", i));
             lr.transform.parent = this.transform;
@@ -32,17 +32,17 @@ public class GraphController : MonoBehaviour {
 
 
         dataSource = new DataSource();
-        dataSource.generateMockDataSource(months,0, 2000);
+        dataSource.generateMockDataSource(months, 0, 2000);
         materialList = new Dictionary<string, Material>();
         float lastXOffset = 0;
         Vector3 currentOffset = Vector3.zero;
 
         foreach (var kvp in dataSource.dataSetCategories)
         {
-        
-           var material = new Material(Shader.Find("Transparent/Diffuse"));
+
+            var material = new Material(Shader.Find("Transparent/Diffuse"));
             material.color = UnityEngine.Random.ColorHSV();
-            materialList.Add(kvp.Key,material);
+            materialList.Add(kvp.Key, material);
             foreach (var item in dataSource.dataSet.Where(p => p.key == kvp.Key))
             {
                 GameObject go = Instantiate(barPrefab);
@@ -54,7 +54,7 @@ public class GraphController : MonoBehaviour {
 
                 go.transform.parent = this.transform;
                 bars.Add(go);
-               
+
             }
             /*
             var line = gameObject.GetComponent<LineRenderer>();
@@ -69,15 +69,15 @@ public class GraphController : MonoBehaviour {
         {
             var line = lineRenderers[i];
             line.material = new Material(Shader.Find("Particles/Additive"));
-            line.startColor=Color.blue;
+            line.startColor = Color.blue;
             line.endColor = Color.blue;
             line.widthMultiplier = 0.1f;
             line.positionCount = 3;
-            line.SetPosition(0, new Vector3(0, i*2, currentOffset.z));
+            line.SetPosition(0, new Vector3(0, i * 2, currentOffset.z));
             line.SetPosition(1, new Vector3(lastXOffset, i * 2, currentOffset.z));
             line.SetPosition(2, new Vector3(lastXOffset, i * 2, 0));
         }
-       
+
         menu.populateLegend(materialList);
         setZAxisLabels(months);
 
@@ -97,8 +97,8 @@ public class GraphController : MonoBehaviour {
             var go = Instantiate(zAxisTextPrefab, new Vector3(xOffset, 0, -4.5f), Quaternion.Euler(90, -45, 0));
             go.transform.Translate(new Vector3(2, 0, 0));
             go.transform.parent = axisContainer.transform;
-          
-            var month = i % 12 == 0?12:i%12;
+
+            var month = i % 12 == 0 ? 12 : i % 12;
             var display = new DateTime(year, month, 1).ToString("MMM yyyy");
             xOffset += 2;
             year = month == 12 ? year + 1 : year;
@@ -110,7 +110,15 @@ public class GraphController : MonoBehaviour {
 
 
     }
-
+    public void changeVisibility(string name) {
+        foreach(var bar in bars)
+        {
+            if (bar.name == name)
+            { 
+                bar.SetActive(!bar.activeSelf);
+            }
+        }
+        }
 
 
 

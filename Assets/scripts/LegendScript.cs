@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using HoloToolkit.Unity.InputModule;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 
 public class LegendScript : MonoBehaviour {
     public GameObject text;
-    public Toggle Toggle; 
+ 
+
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+       
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,12 +24,13 @@ public class LegendScript : MonoBehaviour {
     public void populateLegend(Dictionary<string, Material> materialList)
     {
 
-        float offset = 0;
+        float offset = 5;
 
         foreach(var key in materialList.Keys)
         {
-            var gameObject=Instantiate(text,new Vector3(-10,offset,-10),Quaternion.Euler(0,0,0));
-            offset -= 1.5f;
+            var gameObject=Instantiate(text,new Vector3(this.transform.position.x,offset, this.transform.position.z),Quaternion.Euler(0,0,0));
+            gameObject.name = key;
+            offset -= 0.4f;
             gameObject.GetComponent<TextMesh>().text= key;
             gameObject.transform.GetChild(0).GetComponent<MeshRenderer>().material = materialList[key];
             gameObject.transform.parent = this.transform;
@@ -36,7 +40,6 @@ public class LegendScript : MonoBehaviour {
 
 
     }
-
 
 }
 
