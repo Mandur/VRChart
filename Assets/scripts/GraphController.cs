@@ -48,10 +48,11 @@ public class GraphController : MonoBehaviour {
                 go.transform.parent = this.transform;
                 bars.Add(go);
             }
+            /*
             var line = gameObject.GetComponent<LineRenderer>();
             var distance = Vector3.Distance(new Vector3(-5, 5, currentOffset.z), new Vector3(currentOffset.x + 5, 5, currentOffset.z));
             line.materials[0].mainTextureScale = new Vector3(distance, 1, 1);
-
+            */
             currentOffset.x = 0;
             currentOffset.z += 2;
         }
