@@ -32,21 +32,21 @@ public class GraphController : MonoBehaviour {
         foreach (var kvp in dataSource.dataSetCategories)
         {
         
-           var material = new Material(Shader.Find("Specular"));
+           var material = new Material(Shader.Find("Transparent/Diffuse"));
             material.color = UnityEngine.Random.ColorHSV();
             materialList.Add(kvp.Key,material);
             foreach (var item in dataSource.dataSet.Where(p => p.key == kvp.Key))
             {
                 GameObject go = Instantiate(barPrefab);
+                go.name = item.key;
                 go.transform.localScale = new Vector3(1, (float)item.value * scale, 1);
                 go.transform.position = new Vector3(currentOffset.x, go.transform.localScale.y / 2, currentOffset.z);
-
-
-
                 go.GetComponent<MeshRenderer>().material = material;
                 currentOffset.x += 2;
+
                 go.transform.parent = this.transform;
                 bars.Add(go);
+               
             }
             /*
             var line = gameObject.GetComponent<LineRenderer>();
@@ -65,9 +65,6 @@ public class GraphController : MonoBehaviour {
 
     public void setZAxisLabels(int totalMonths)
     {
-
-
-
         var i = 1;
         var year = DateTime.Now.Year - 3;
         var currentOffset = Vector3.zero;
@@ -75,6 +72,7 @@ public class GraphController : MonoBehaviour {
         while (i <= totalMonths)
         {
             var go = Instantiate(zAxisTextPrefab, new Vector3(xOffset, 0, -4.5f), Quaternion.Euler(90, -45, 0));
+            go.transform.Translate(new Vector3(2, 0, 0));
             var month = i % 12 == 0?12:i%12;
             var display = new DateTime(year, month, 1).ToString("MMM yyyy");
             xOffset += 2;
